@@ -50,6 +50,7 @@ _WHITE = (255, 255, 255)
 _GREEN = (0, 255, 0)
 _RED = (255, 0, 0)
 _BLUE = (0,0,255)
+_PINK = (255, 192, 203)
 
 _BACKGROUND_COLOR = _WHITE
 _GRID_COLOR = _BLACK
@@ -215,10 +216,10 @@ class Viewer(object):
             p.update(scale=self.grid_size / p.width)
         batch.draw()
         for p in env.players:
-            self._draw_badge(*p.position, p.level)
+            self._draw_badge(*p.position, p.level, p.score)
             self._draw_logic_badge(*p.position, p.level, p.load_logic)
 
-    def _draw_badge(self, row, col, level):
+    def _draw_badge(self, row, col, level, food_loaded=0):
         resolution = 6
         radius = self.grid_size / 5
 
@@ -233,7 +234,10 @@ class Viewer(object):
             y = radius * math.sin(angle) + badge_y
             verts += [x, y]
         circle = pyglet.graphics.vertex_list(resolution, ("v2f", verts))
-        glColor3ub(*_WHITE)
+        if food_loaded:
+            glColor3ub(*_PINK)
+        else:
+            glColor3ub(*_WHITE)
         circle.draw(GL_POLYGON)
         glColor3ub(*_BLACK)
         circle.draw(GL_LINE_LOOP)
